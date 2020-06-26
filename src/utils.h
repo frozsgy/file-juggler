@@ -4,6 +4,8 @@
 #include <stdio.h>
 #include <stddef.h>
 #include <math.h>
+#include <time.h>
+
 #include "blocks.h"
 
 
@@ -12,5 +14,7 @@ void PrintHelp();
 int CheckBlockSize(int block_size);
 
 int CalculateBlockCount(int block_size, size_t file_size);
+
+int GetYear();
 
 #endif // _JUGGLER_UTILS_H_

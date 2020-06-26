@@ -9,6 +9,10 @@
 #include "utils.h"
 #include "file.h"
 
+#define APP_NAME "file_juggler"
+#define VERSION 0.1
+#define YEAR GetYear()
+
 int main(int argc, char** argv)
 {
 	if (argc != 4) {
@@ -53,10 +57,12 @@ int main(int argc, char** argv)
         exit(6);
     }
 
-    printf("i will use %d many blocks. the file size was %lu\n", CalculateBlockCount(block_size, file_size), file_size);
+	if (WriteSignature(fd_destination, APP_NAME, YEAR, VERSION) < sizeof(signature)) {
+		fprintf(stderr, "Error writing to file: %s\n", destination);
+        exit(7);
+	}
 
-	
-
+	printf("i will use %d many blocks. the file size was %lu\n", CalculateBlockCount(block_size, file_size), file_size);
 
 
 	return 0;

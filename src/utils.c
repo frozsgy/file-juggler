@@ -27,3 +27,13 @@ int CalculateBlockCount(int block_size, size_t file_size)
     float block_count = ceil(file_size / (double) data_per_block);
     return (int) block_count;
 }
+
+int GetYear()
+{
+    int year;
+    time_t now;
+    time(&now);
+    struct tm *local = localtime(&now);
+    year = local->tm_year + 1900;
+    return year;
+}
