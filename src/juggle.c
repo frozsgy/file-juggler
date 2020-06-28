@@ -66,12 +66,41 @@ int main(int argc, char** argv)
 
     block_count = CalculateBlockCount(block_size, file_size);
 
-    block_list = GetBlockOrdering(n);
+    block_list = GetBlockOrdering(block_count);
+
+    /* TESTING READ AND WRITE */ 
+
+    block test;
+    test.b_1.position = -1;
+    char* tt = "hello from the other side, this is a test data nr 2";
+    strcpy(test.b_1.data, tt);
+
+    WriteBlock(fd_destination, block_size, 0, test);
+
+
+    test.b_1.position = 0;
+    tt = "hello from the other side, this is a test data nr 1";
+    strcpy(test.b_1.data, tt);
+
+    WriteBlock(fd_destination, block_size, 1, test);
+
+    CloseFile(fd_destination);
+
+    fd_destination = OpenFile(destination);
+
+    block tr = ReadBlock(fd_destination, block_size, 0);
+    printf("%d\n", tr.b_1.position);
+    printf("%s\n", tr.b_1.data);
+
+    tr = ReadBlock(fd_destination, block_size, 1);
+    printf("%d\n", tr.b_1.position);
+    printf("%s\n", tr.b_1.data);
 
     
 
 
 
+    /* READ WRITE TEST ENDED */
 
     free(block_list);
 

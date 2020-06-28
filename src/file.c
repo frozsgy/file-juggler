@@ -32,3 +32,19 @@ int WriteSignature(int fd, const char* name, int year, double version)
     strcpy(s_block.name, name);
     return write(fd, &s_block, sizeof(signature));
 }
+
+block ReadBlock(int fd, int block_size, int offset)
+{
+    block r;
+    int file_offset = sizeof(signature) + (offset * block_size * 1024 * sizeof(char));
+    lseek(fd, file_offset, SEEK_SET);
+    read(fd, &r, block_size * 1024 * sizeof(char));
+    return r;
+}
+
+int WriteBlock(int fd, int block_size, int offset, block data)
+{
+    int file_offset = sizeof(signature) + (offset * block_size * 1024 * sizeof(char));
+    lseek(fd, file_offset, SEEK_SET);
+    return write(fd, &data, block_size * 1024 * sizeof(char));
+}

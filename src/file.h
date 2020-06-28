@@ -18,4 +18,8 @@ size_t GetFileSize(int fd);
 
 int WriteSignature(int fd, const char* name, int year, double version);
 
+block ReadBlock(int fd, int block_size, int offset);
+
+int WriteBlock(int fd, int block_size, int offset, block data);
+
 #endif //FILE_JUGGLER_FILE_H
