@@ -22,4 +22,6 @@ block ReadBlock(int fd, int block_size, int offset);
 
 int WriteBlock(int fd, int block_size, int offset, block data);
 
+void ReadSource(int fd, int data_size, int offset, char* data);
+
 #endif //FILE_JUGGLER_FILE_H

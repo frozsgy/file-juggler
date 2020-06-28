@@ -48,3 +48,10 @@ int WriteBlock(int fd, int block_size, int offset, block data)
     lseek(fd, file_offset, SEEK_SET);
     return write(fd, &data, block_size * 1024 * sizeof(char));
 }
+
+void ReadSource(int fd, int data_size, int offset, char* data)
+{
+    unsigned long long file_offset = offset * data_size;
+    lseek(fd, file_offset, SEEK_SET);
+    read(fd, data, data_size);
+}

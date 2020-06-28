@@ -21,13 +21,17 @@ int main(int argc, char** argv)
     }
 
     int block_size;
+    int data_size;
     int fd_source;
     int fd_destination;
     int block_count;
     size_t file_size;
     int* block_list;
+    int* block_map;
     char* source;
     char* destination;
+    char* data;
+    block data_block;
 
     block_size = atoi(argv[1]);
     source = argv[2];
@@ -67,42 +71,46 @@ int main(int argc, char** argv)
     block_count = CalculateBlockCount(block_size, file_size);
 
     block_list = GetBlockOrdering(block_count);
+    block_map = malloc(sizeof(int) * block_count);
+    for (int i = 0; i < block_count; i++) {
+        block_map[block_list[i]] = i;
+    }
 
-    /* TESTING READ AND WRITE */ 
+    
+    data_size = block_size * 1024 * sizeof(char) - 4;
+    data = malloc(data_size);
 
-    block test;
-    test.b_1.position = -1;
-    char* tt = "hello from the other side, this is a test data nr 2";
-    strcpy(test.b_1.data, tt);
+    for (int i = 0; i < block_count; i++) {
+        ReadSource(fd_source, data_size, block_list[i], data);
+        int next_position = (block_list[i] + 1 == block_count) ? -1 : block_map[block_list[i] + 1];
+        data_block.b_32.position = next_position;
+        strncpy(data_block.b_32.data, data, block_size * 1024 * sizeof(char) - 4);
+        WriteBlock(fd_destination, block_size, i, data_block);
+    }
 
-    WriteBlock(fd_destination, block_size, 0, test);
-
-
-    test.b_1.position = 0;
-    tt = "hello from the other side, this is a test data nr 1";
-    strcpy(test.b_1.data, tt);
-
-    WriteBlock(fd_destination, block_size, 1, test);
+    /* TESTING READ WITHOUT FOLLOWING NEXT FILE OFFSETS */ 
 
     CloseFile(fd_destination);
 
     fd_destination = OpenFile(destination);
-
-    block tr = ReadBlock(fd_destination, block_size, 0);
-    printf("%d\n", tr.b_1.position);
-    printf("%s\n", tr.b_1.data);
-
-    tr = ReadBlock(fd_destination, block_size, 1);
-    printf("%d\n", tr.b_1.position);
-    printf("%s\n", tr.b_1.data);
-
-    
-
+    int bytes = 0;
+    for (int i = 0; i < block_count; i++) {
+        block tr = ReadBlock(fd_destination, block_size, block_map[i]);
+        printf("%d\n", tr.b_32.position);
+        for (int j = 0; j < data_size; j++) {
+            bytes++;
+            if (bytes == file_size) break;
+            printf("%c", tr.b_32.data[j]);    
+        }        
+        printf("\n");
+        
+    }
 
 
     /* READ WRITE TEST ENDED */
 
     free(block_list);
+    free(block_map);
 
     return 0;
 }
