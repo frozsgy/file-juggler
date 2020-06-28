@@ -13,6 +13,7 @@ int CheckBlockSize(int block_size)
         case 4:
         case 8:
         case 16:
+        case 32:
             return 1;
             break;
         default:
@@ -36,4 +37,24 @@ int GetYear()
     struct tm *local = localtime(&now);
     year = local->tm_year + 1900;
     return year;
+}
+
+int* GetBlockOrdering(int n)
+{
+    int* r = malloc(sizeof(int) * n);
+
+    for (int i = 0; i < n; i++) {
+        r[i] = i;
+    }
+
+    srand(time(NULL));
+
+    for (int i = n-1; i > 0; i--) {
+        int j = rand() % (i + 1);
+        int k = r[i];
+        r[i] = r[j];
+        r[j] = k;
+    }
+
+    return r;
 }

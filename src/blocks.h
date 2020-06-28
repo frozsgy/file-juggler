@@ -37,6 +37,7 @@ typedef union block {
     block_4kb b_4;
     block_8kb b_8;
     block_16kb b_16;
+    block_32kb b_32;
 } block;
 
 /**
