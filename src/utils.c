@@ -29,16 +29,6 @@ int CalculateBlockCount(int block_size, size_t file_size)
     return (int) block_count;
 }
 
-int GetYear()
-{
-    int year;
-    time_t now;
-    time(&now);
-    struct tm *local = localtime(&now);
-    year = local->tm_year + 1900;
-    return year;
-}
-
 int* GetBlockOrdering(int n)
 {
     int* r = malloc(sizeof(int) * n);

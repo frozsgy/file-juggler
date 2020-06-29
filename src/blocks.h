@@ -45,8 +45,12 @@ typedef union block {
  */
 typedef struct signature {
     unsigned char name[16];
-    unsigned int year;
+    unsigned int block_size;
     double version;
 } signature;
+
+typedef struct file_name {
+    unsigned char file_name[256];
+} file_name;
 
 #endif // FILE_JUGGLER_BLOCKS_H

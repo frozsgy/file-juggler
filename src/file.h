@@ -5,6 +5,7 @@
 #include <fcntl.h>
 #include <stddef.h>
 #include <string.h>
+#include <stdlib.h>
 
 #include "blocks.h"
 
@@ -16,12 +17,14 @@ void CloseFile(int fd);
 
 size_t GetFileSize(int fd);
 
-int WriteSignature(int fd, const char* name, int year, double version);
+int WriteSignature(int fd, const char* name, int block_size, double version);
+
+int WriteName(int fd, const char* name);
 
 block ReadBlock(int fd, int block_size, int offset);
 
 int WriteBlock(int fd, int block_size, int offset, block data);
 
-void ReadSource(int fd, int data_size, int offset, char* data);
+void ReadSource(int fd, int data_size, int offset, unsigned char* data);
 
 #endif //FILE_JUGGLER_FILE_H

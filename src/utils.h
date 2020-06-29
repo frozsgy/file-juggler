@@ -16,8 +16,6 @@ int CheckBlockSize(int block_size);
 
 int CalculateBlockCount(int block_size, size_t file_size);
 
-int GetYear();
-
 int* GetBlockOrdering(int n);
 
 #endif // _JUGGLER_UTILS_H_
