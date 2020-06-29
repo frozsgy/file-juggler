@@ -52,4 +52,7 @@ Mkfile.old
 dkms.conf
 
 # Executables
-juggle
+build/*
+
+# Object files
+obj/*

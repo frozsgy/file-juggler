@@ -10,12 +10,16 @@
 #include "blocks.h"
 
 
-void PrintHelp();
+void PrintJuggleHelp();
+
+void PrintDejuggleHelp();
 
 int CheckBlockSize(int block_size);
 
 int CalculateBlockCount(int block_size, size_t file_size);
 
 int* GetBlockOrdering(int n);
+
+void InvertData(int data_size, unsigned char* data);
 
 #endif // _JUGGLER_UTILS_H_

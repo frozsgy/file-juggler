@@ -44,13 +44,14 @@ typedef union block {
  * 32 byte block to add at the beginning of each juggled file
  */
 typedef struct signature {
-    unsigned char name[16];
+    char name[16];
     unsigned int block_size;
     double version;
 } signature;
 
-typedef struct file_name {
-    unsigned char file_name[256];
-} file_name;
+typedef struct file {
+    char name[256];
+    size_t size;
+} file;
 
 #endif // FILE_JUGGLER_BLOCKS_H

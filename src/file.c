@@ -26,6 +26,18 @@ size_t GetFileSize(int fd)
     return size;
 }
 
+int ReadSignature(int fd)
+{
+    signature s;
+    lseek(fd, 0, SEEK_SET);
+    read(fd, &s, sizeof(signature));
+    if (strcmp(s.name, APP_NAME) == 0) {
+        return s.block_size;
+    } else {
+        return 0;
+    }
+}
+
 int WriteSignature(int fd, const char* name, int block_size, double version)
 {
     int r;
@@ -38,13 +50,22 @@ int WriteSignature(int fd, const char* name, int block_size, double version)
     return r;
 }
 
-int WriteName(int fd, const char* name)
+size_t ReadFileSignature(int fd)
+{
+    file f;
+    lseek(fd, sizeof(signature), SEEK_SET);
+    read(fd, &f, sizeof(file));
+    return f.size;
+}
+
+int WriteFileSignature(int fd, const char* name, unsigned long long size)
 {
     int r;
-    file_name* f_block = calloc(1, sizeof(file_name));
-    strcpy(f_block->file_name, name);
+    file* f_block = calloc(1, sizeof(file));
+    strcpy(f_block->name, name);
+    f_block->size = size;
     lseek(fd, sizeof(signature), SEEK_SET);
-    r = write(fd, f_block, sizeof(file_name));
+    r = write(fd, f_block, sizeof(file));
     free(f_block);
     return r;
 }
@@ -52,7 +73,7 @@ int WriteName(int fd, const char* name)
 block ReadBlock(int fd, int block_size, int offset)
 {
     block r;
-    int file_offset = sizeof(signature) + sizeof(file_name) + (offset * block_size * 1024 * sizeof(char));
+    int file_offset = sizeof(signature) + sizeof(file) + (offset * block_size * 1024 * sizeof(char));
     lseek(fd, file_offset, SEEK_SET);
     read(fd, &r, block_size * 1024 * sizeof(char));
     return r;
@@ -60,7 +81,7 @@ block ReadBlock(int fd, int block_size, int offset)
 
 int WriteBlock(int fd, int block_size, int offset, block data)
 {
-    int file_offset = sizeof(signature) + sizeof(file_name) + (offset * block_size * 1024 * sizeof(char));
+    int file_offset = sizeof(signature) + sizeof(file) + (offset * block_size * 1024 * sizeof(char));
     lseek(fd, file_offset, SEEK_SET);
     return write(fd, &data, block_size * 1024 * sizeof(char));
 }

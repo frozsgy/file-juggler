@@ -1,8 +1,13 @@
 #include "utils.h"
 
-void PrintHelp()
+void PrintJuggleHelp()
 {
-    printf("usage: ./juggle block-size file-to-juggled new-name\n");
+    printf("usage: ./juggler block-size file-to-juggled new-name\n");
+}
+
+void PrintDejuggleHelp()
+{
+    printf("usage: ./dejuggler first-block-id file-to-dejuggled new-name\n");
 }
 
 int CheckBlockSize(int block_size)
@@ -47,4 +52,11 @@ int* GetBlockOrdering(int n)
     }
 
     return r;
+}
+
+void InvertData(int data_size, unsigned char* data)
+{
+    for (int i = 0; i < data_size; i++) {
+        data[i] = ~data[i];
+    }
 }
